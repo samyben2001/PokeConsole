@@ -6,13 +6,25 @@ namespace PokemonGame.Models.Models
     public class Pokemon
     {
         private int _health;
+        private bool _isAlive = true;
         private string _name;
         private int _attack;
         private int _defense;
         private int _speed;
         private int? _captureRate;
 
-        public int Health { get => _health; set => _health = value; }
+        public int Health { 
+            get => _health; 
+            set {
+                if (value < 0)
+                {
+                    value = 0;
+                    IsAlive = false;
+                }
+                _health = value;
+            } 
+        }
+        public bool IsAlive { get => _isAlive; set => _isAlive = value; }
         public string Name { get => _name; set => _name = value; }
         public int Attack { get => _attack; set => _attack = value; }
         public int Defense { get => _defense; set => _defense = value; }

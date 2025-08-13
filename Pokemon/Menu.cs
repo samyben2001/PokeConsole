@@ -8,7 +8,9 @@ namespace PokemonGame
         // Selection du Pokémon de départ
         internal static int SelectStartPokemon()
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\nChoississez votre pokémon de départ:");
+            Console.ResetColor();
             Console.WriteLine($"1 - {PokeNames.Bulbizarre}");
             Console.WriteLine($"2 - {PokeNames.Carapuce}");
             Console.WriteLine($"3 - {PokeNames.Salameche}\n");
@@ -27,7 +29,9 @@ namespace PokemonGame
         // Affichage du menu principal
         internal static int MainMenu(Player player)
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\nQue Voulez-vous faire?:");
+            Console.ResetColor();
             Console.WriteLine("1 - Voir vos Pokémons");
             Console.WriteLine("2 - Mettre un Pokémon en réserve");
             Console.WriteLine("3 - Récupèrer un Pokémon de la réserve");
@@ -52,7 +56,9 @@ namespace PokemonGame
         // Affichage de la boutique
         internal static int Shop(Player player)
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"\nQue voulez-vous achetez? ({player.Bag.Items.First(i => i.Name == ItemsNames.Money.ToString()).Quantity})\n");
+            Console.ResetColor();
             Console.WriteLine($"1 - Pokeball (10PO)   [{player.Bag.Items.First(i => i.Name == ItemsNames.PokeBalls.ToString()).Quantity}]");
             Console.WriteLine($"2 - Potion   (10PO)   [{player.Bag.Items.First(i => i.Name == ItemsNames.Potions.ToString()).Quantity}]");
             Console.WriteLine("0 - Quitter\n");

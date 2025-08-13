@@ -33,7 +33,9 @@ namespace PokemonGame.Models.Models
         public bool ListPokemons(bool inReserve = false)
         {
             bool isNotEmpty = true;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\nVos Pokemons" + (inReserve ? " en réserve" : "") + ":");
+            Console.ResetColor();
             List<Pokemon> pokes = inReserve ? PokemonsReserve : Pokemons;
 
             Console.WriteLine("________________________________");
@@ -94,8 +96,14 @@ namespace PokemonGame.Models.Models
         {
             try
             {
-                Pokemons.ForEach(p => p.Health = 100);
-                Bag.Items.First(i => i.Name == ItemsNames.Potions.ToString()).Quantity -= Pokemons.Count;
+                Pokemons.ForEach(p =>
+                {
+                    if (p.IsAlive && p.Health < 100) // Check si le pokémon n'est pas mort ou en pleine santé
+                    {
+                        p.Health = 100;
+                    }
+                });
+                Bag.Items.First(i => i.Name == ItemsNames.Potions.ToString()).Quantity -= Pokemons.FindAll(p => p.IsAlive).Count;
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Tous vos Pokémons ont bien été soignés");
                 Console.ResetColor();
@@ -110,10 +118,24 @@ namespace PokemonGame.Models.Models
 
         public void HealPokemon(Pokemon pokemon)
         {
-            pokemon.Health = 100;
-            Bag.Items.First(i => i.Name == ItemsNames.Potions.ToString()).Quantity--;
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"{pokemon.Name} à bien été mis en soigné");
+            if (pokemon.IsAlive && pokemon.Health < 100) // Check si le pokémon n'est pas mort ou en pleine santé
+            {
+                pokemon.Health = 100;
+                Bag.Items.First(i => i.Name == ItemsNames.Potions.ToString()).Quantity--;
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{pokemon.Name} à bien été mis en soigné");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                if (!pokemon.IsAlive)
+                {
+                    Console.WriteLine("Vous ne pouvez pas soigner ce Pokémon. Il est actuellement mort.");
+                }
+                else {
+                    Console.WriteLine("Ce Pokémon est déja en pleine santé!");
+                }
+            } 
             Console.ResetColor();
         }
 

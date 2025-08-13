@@ -1,5 +1,4 @@
 ﻿using PokemonGame.Models.Enums;
-using PokemonGame.Models.Exceptions;
 using PokemonGame.Models.Models;
 
 namespace PokemonGame
@@ -30,7 +29,9 @@ namespace PokemonGame
         // Initialisation du joueur avec son nom
         private static void AskPlayerName()
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Entrez le nom de votre Personnage");
+            Console.ResetColor();
             player.Name = Console.ReadLine()!;
         }
 
@@ -94,7 +95,9 @@ namespace PokemonGame
                 case 6: // Tenter de capturer un Pokémon
                     player.TryToCapture(Pokemon.GeneratePokemon());
                     break;
-                case 7: // TODO: Combattre un dresseur
+                case 7: // Combattre un adversaire
+                    Player enemy = GenerateEnemy();
+                    StartFight(player, enemy);
                     break;
                 case 8: // Aller à la boutique
                     Shop.OpenShop(player);
@@ -130,6 +133,68 @@ namespace PokemonGame
             }
 
             return pokeChoice;
+        }
+
+        private static Player GenerateEnemy()
+        {
+            Player enemy = new Player("Ennemi");
+            for (int i = 0; i < Tools.Tools.GetRandomNumber(1, 6); i++)
+            {
+                enemy.Pokemons.Add(Pokemon.GeneratePokemon());
+            }
+            enemy.ListPokemons();
+            return enemy;
+        }
+
+        private static void StartFight(Player player, Player enemy)
+        {
+            Console.ForegroundColor= ConsoleColor.Yellow;
+            Console.WriteLine("Vous avez rencontrer un adversaire. Préparez-vous pour le combat!");
+            Console.ResetColor();
+            bool playerAdvantage = null;
+            bool fightIsOver = false;
+
+            // Aléatoire pour déterminer qui commence
+            if(Tools.Tools.GetRandomNumber(0, 1) == 1)
+            {
+                playerAdvantage = true;
+                Console.WriteLine("Vous avez pris l'avantage!");
+            }
+            else
+            {
+                playerAdvantage = false;
+                Console.WriteLine("Votre adversaire à pris l'avantage!");
+            }
+
+            do
+            {
+                // Récupère le premier Pokémon en vie de chanque dresseur
+                Pokemon? pokeEnemy = enemy.Pokemons.FirstOrDefault(p => p.IsAlive, null);
+                Pokemon? pokePlayer = player.Pokemons.FirstOrDefault(p => p.IsAlive, null);
+
+                if(pokeEnemy == null || pokePlayer == null)
+                {
+                    fightIsOver = true; // Fin de combat si l'un des 2 dresseur ne possède plus de Pokémon en vie
+                }
+                else
+                {
+                    do
+                    {
+                        if (playerAdvantage)
+                        {
+                            // Tour du joueur
+                            // TODO: soit attaque, soit soin sur pokemon (via menu)
+
+                        }
+                        else
+                        {
+                            // Tour de l'adversaire
+                            // TODO: soit attaque, soit soin sur pokemon (via aléatoire)
+                        }
+                        playerAdvantage = !playerAdvantage;
+                    } while (pokePlayer.IsAlive && pokeEnemy.IsAlive); // Combat à mort entre 2 Pokémons
+                }
+            } while (!fightIsOver);
         }
     }
 }
