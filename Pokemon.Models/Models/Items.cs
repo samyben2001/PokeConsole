@@ -8,6 +8,7 @@ namespace PokemonGame.Models.Models
         private string _name;
         private int _quantity;
         private int _maxQuantity;
+        private int? _price;
 
         public string Name { get => _name; set => _name = value; }
         public int Quantity { 
@@ -26,12 +27,21 @@ namespace PokemonGame.Models.Models
                 _quantity = value; 
             }}
         public int MaxQuantity { get => _maxQuantity; set => _maxQuantity = value; }
+        public int? Price { get => _price; set => _price = value; }
 
         public Items(string name, int quantity, int max_quantity)
         {
             Name = name;
             MaxQuantity = max_quantity;
             Quantity = quantity;
+        }
+
+        public Items(string name, int quantity, int max_quantity, int price)
+        {
+            Name = name;
+            MaxQuantity = max_quantity;
+            Quantity = quantity;
+            Price = price;
         }
     }
 

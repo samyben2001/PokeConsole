@@ -15,15 +15,18 @@ namespace PokemonGame
                 shopChoice = Menu.Shop(player);
                 try
                 {
+                    Items playerMoney = player.Bag.Items.First(i => i.Name == ItemsNames.Money.ToString());
                     switch (shopChoice)
                     {
                         case 1: // Acheter une pokéball
-                            player.Bag.Items.First(i => i.Name == ItemsNames.PokeBalls.ToString()).Quantity++;
-                            player.Bag.Items.First(i => i.Name == ItemsNames.Money.ToString()).Quantity -= 10;
+                            Items pokeball = player.Bag.Items.First(i => i.Name == ItemsNames.PokeBalls.ToString());
+                            playerMoney.Quantity -= (int)pokeball.Price!;
+                            pokeball.Quantity++;
                             break;
                         case 2: // Acheter une potion
-                            player.Bag.Items.First(i => i.Name == ItemsNames.Potions.ToString()).Quantity++;
-                            player.Bag.Items.First(i => i.Name == ItemsNames.Money.ToString()).Quantity -= 10;
+                            Items potion = player.Bag.Items.First(i => i.Name == ItemsNames.Potions.ToString());
+                            playerMoney.Quantity -= (int)potion.Price!;
+                            potion.Quantity++;
                             break;
                         default:
                             break;

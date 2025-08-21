@@ -9,18 +9,26 @@ namespace PokemonGame
 
         public static void StartGame()
         {
+            InitializeConsoleWindow();
             AskPlayerName();
             InitializePlayerBag();
+            player.GetInfos();
             ChoicePokemonStart();
             ChoiceMenuOption();
+        }
+
+
+        private static void InitializeConsoleWindow()
+        {
+            Console.SetWindowSize(120, 40);
         }
 
         // Initialisation de l'inventaire du joueurs avec qualques objets de base
         private static void InitializePlayerBag()
         {
             Items money = new Items(ItemsNames.Money.ToString(), 100, 9999);
-            Items pokeballs = new Items(ItemsNames.PokeBalls.ToString(), 80, 99);
-            Items potions = new Items(ItemsNames.Potions.ToString(), 6, 99);
+            Items pokeballs = new Items(ItemsNames.PokeBalls.ToString(), 80, 99, 10);
+            Items potions = new Items(ItemsNames.Potions.ToString(), 6, 99, 15);
             player.Bag.Items.Add(money);
             player.Bag.Items.Add(pokeballs);
             player.Bag.Items.Add(potions);
@@ -61,6 +69,7 @@ namespace PokemonGame
                 default:
                     break;
             }
+            player.ListPokemons();
             Console.ResetColor();
         }
 
@@ -96,8 +105,8 @@ namespace PokemonGame
                     player.TryToCapture(Pokemon.GeneratePokemon());
                     break;
                 case 7: // Combattre un adversaire
-                    Player enemy = GenerateEnemy();
-                    StartFight(player, enemy);
+                    Player enemy = BattleManager.GenerateEnemy();
+                    BattleManager.StartFight(player, enemy);
                     break;
                 case 8: // Aller à la boutique
                     Shop.OpenShop(player);
@@ -133,68 +142,6 @@ namespace PokemonGame
             }
 
             return pokeChoice;
-        }
-
-        private static Player GenerateEnemy()
-        {
-            Player enemy = new Player("Ennemi");
-            for (int i = 0; i < Tools.Tools.GetRandomNumber(1, 6); i++)
-            {
-                enemy.Pokemons.Add(Pokemon.GeneratePokemon());
-            }
-            enemy.ListPokemons();
-            return enemy;
-        }
-
-        private static void StartFight(Player player, Player enemy)
-        {
-            Console.ForegroundColor= ConsoleColor.Yellow;
-            Console.WriteLine("Vous avez rencontrer un adversaire. Préparez-vous pour le combat!");
-            Console.ResetColor();
-            bool playerAdvantage = null;
-            bool fightIsOver = false;
-
-            // Aléatoire pour déterminer qui commence
-            if(Tools.Tools.GetRandomNumber(0, 1) == 1)
-            {
-                playerAdvantage = true;
-                Console.WriteLine("Vous avez pris l'avantage!");
-            }
-            else
-            {
-                playerAdvantage = false;
-                Console.WriteLine("Votre adversaire à pris l'avantage!");
-            }
-
-            do
-            {
-                // Récupère le premier Pokémon en vie de chanque dresseur
-                Pokemon? pokeEnemy = enemy.Pokemons.FirstOrDefault(p => p.IsAlive, null);
-                Pokemon? pokePlayer = player.Pokemons.FirstOrDefault(p => p.IsAlive, null);
-
-                if(pokeEnemy == null || pokePlayer == null)
-                {
-                    fightIsOver = true; // Fin de combat si l'un des 2 dresseur ne possède plus de Pokémon en vie
-                }
-                else
-                {
-                    do
-                    {
-                        if (playerAdvantage)
-                        {
-                            // Tour du joueur
-                            // TODO: soit attaque, soit soin sur pokemon (via menu)
-
-                        }
-                        else
-                        {
-                            // Tour de l'adversaire
-                            // TODO: soit attaque, soit soin sur pokemon (via aléatoire)
-                        }
-                        playerAdvantage = !playerAdvantage;
-                    } while (pokePlayer.IsAlive && pokeEnemy.IsAlive); // Combat à mort entre 2 Pokémons
-                }
-            } while (!fightIsOver);
         }
     }
 }

@@ -123,7 +123,7 @@ namespace PokemonGame.Models.Models
                 pokemon.Health = 100;
                 Bag.Items.First(i => i.Name == ItemsNames.Potions.ToString()).Quantity--;
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{pokemon.Name} à bien été mis en soigné");
+                Console.WriteLine($"{pokemon.Name} à bien été soigné");
             }
             else
             {
@@ -132,10 +132,11 @@ namespace PokemonGame.Models.Models
                 {
                     Console.WriteLine("Vous ne pouvez pas soigner ce Pokémon. Il est actuellement mort.");
                 }
-                else {
+                else
+                {
                     Console.WriteLine("Ce Pokémon est déja en pleine santé!");
                 }
-            } 
+            }
             Console.ResetColor();
         }
 
@@ -184,6 +185,17 @@ namespace PokemonGame.Models.Models
                 }
                 Console.ResetColor();
             }
+        }
+
+        public void GetInfos()
+        {
+            string str =
+                $"╔{string.Concat(Enumerable.Repeat("═", 21))}╗\n" +
+                $"║ {Name} {string.Concat(Enumerable.Repeat(" ", 19 - Name.Length))}║\n" +
+                $"║ {Bag.Items.First(i => i.Name == ItemsNames.Potions.ToString()).Quantity} potions restantes ║\n" +
+                $"║ {Pokemons.Count(p => p.IsAlive)} Pokemons restants ║\n" +
+                $"╚{string.Concat(Enumerable.Repeat("═", 21))}╝\n";
+            Console.WriteLine(str);
         }
     }
 }
